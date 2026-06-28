@@ -10,31 +10,6 @@ Hệ thống có khả năng phân biệt và xử lý hai nhóm câu hỏi chí
 
 ## 🏗️ Kiến trúc Hệ thống
 
-Hệ thống gồm 2 thành phần hoạt động song song:
-
-```mermaid
-graph TD
-    User([Sinh viên / Người dùng]) -->|Đăng nhập & Trò chuyện| UI[Streamlit Frontend Dashboard]
-    
-    subgraph Multi-Agent System (LangGraph)
-        UI --> Supervisor{Supervisor Agent <br> Bộ điều phối}
-        Supervisor -->|Phân loại & Định tuyến| AcademicAgent[Academic Agent <br> Chuyên viên Học vụ]
-        Supervisor -->|Phân loại & Định tuyến| StudentAgent[Student Service Agent <br> Chuyên viên Quản lý Sinh viên]
-        
-        AcademicAgent -->|RAG Search| VectorDB[(Chroma Vector DB)]
-        AcademicAgent -->|Cấp link| FormTool[Form Tools <br> Danh mục Biểu mẫu]
-        
-        StudentAgent -->|Query API| API_Client[API Tools <br> Gọi HTTP Requests]
-    end
-    
-    subgraph Backend Services (.NET)
-        API_Client -->|HTTPS REST| WebAPI[ASP.NET Core Web API]
-        WebAPI -->|SQL Query| SQLServer[(SQL Server Database)]
-    end
-    
-    VectorDB -.->|Đọc dữ liệu học vụ tĩnh| MD_Files[Tài liệu Markdown]
-```
-
 ### 1. Backend Web API (`APISinhVien`)
 - **Công nghệ:** ASP.NET Core 8.0, Entity Framework Core.
 - **Cơ sở dữ liệu:** SQL Server.
