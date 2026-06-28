@@ -33,7 +33,7 @@ SUPERVISOR_PROMPT = """Bạn là TỔNG ĐIỀU PHỐI (Supervisor) của một 
 - TUYỆT ĐỐI KHÔNG chọn FINISH ngay lượt đầu tiên khi người dùng vừa đặt câu hỏi chuyên môn."""
 
 # Cấu hình API Key (Lưu ý: Nên dùng file .env trong thực tế)
-# os.environ["GOOGLE_API_KEY"] = "AIzaSyDN-nvnGCbY0c8njP4V6shGROk2kU16WH0".strip()
+# os.environ["GOOGLE_API_KEY"] = .strip()
 
 # Khởi tạo Mô hình LLM (Bộ não chính)
 llm = ChatGoogleGenerativeAI(
