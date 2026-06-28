@@ -1,0 +1,24 @@
+# Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Bb]in/
+[Oo]bj/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+
+# NuGet
+*.nupkg
+packages/
+
+# Build folders
+bin/
+obj/
+
+# Nếu có nhiều project con .NET
+**/bin/
+**/obj/

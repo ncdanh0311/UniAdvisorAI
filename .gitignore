@@ -1,0 +1,39 @@
+# Visual Studio & VS Code Caches/Settings
+.vs/
+.vscode/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Build folders (.NET)
+bin/
+obj/
+[Dd]ebug/
+[Rr]elease/
+**/bin/
+**/obj/
+**/[Dd]ebug/
+**/[Rr]elease/
+
+# Python Caches & Environments
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env
+.venv/
+env/
+venv/
+pip-log.txt
+*.egg-info/
+.mypy_cache/
+.pytest_cache/
+
+# OS specific files
+Thumbs.db
+Desktop.ini
+
+# Application-specific generated logs / test reports
+MultiAgent/DanhGia/BaoCao_KiemThu_*
+MultiAgent/DanhGia/Evaluation_Report.txt
