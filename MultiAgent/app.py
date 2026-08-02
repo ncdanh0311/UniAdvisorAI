@@ -1,5 +1,8 @@
+import os
 import streamlit as st
 import requests
+from dotenv import load_dotenv
+load_dotenv()
 from langchain_core.messages import HumanMessage, AIMessage
 from multi_agent_gpt import app as agent_app
 
@@ -22,8 +25,8 @@ if "student_data" not in st.session_state:
 if "chat_messages" not in st.session_state:
     st.session_state.chat_messages = []
 
-# Đảm bảo bạn đang dùng đúng port của API Backend
-BASE_API_URL = "https://localhost:44326/api"
+# Đọc cấu hình từ biến môi trường (xem file .env)
+BASE_API_URL = os.getenv("BACKEND_API_URL", "https://localhost:44326/api")
 
 # ==========================================
 # 2. GIAO DIỆN ĐĂNG NHẬP (LOGIN SCREEN)

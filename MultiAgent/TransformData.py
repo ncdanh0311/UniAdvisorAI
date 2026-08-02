@@ -1,12 +1,14 @@
 import os
 import time
+from dotenv import load_dotenv
+load_dotenv()
 from langchain_community.document_loaders import DirectoryLoader, TextLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from langchain_community.vectorstores import Chroma
 
-# 1. Cấu hình API Key của Gemini
-os.environ["GOOGLE_API_KEY"] = "".strip()
+# Load GOOGLE_API_KEY từ file .env
+os.environ.setdefault("GOOGLE_API_KEY", os.getenv("GOOGLE_API_KEY", ""))
 
 def tao_kho_du_lieu_vector():
     print("1. Đang quét và đọc TẤT CẢ các file Markdown (.md) trong thư mục './data_markdown'...")

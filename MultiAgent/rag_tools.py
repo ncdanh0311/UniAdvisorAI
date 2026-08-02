@@ -3,12 +3,15 @@ from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from langchain_openai import OpenAIEmbeddings
 from langchain_core.tools import tool
 import time
+import os
+from dotenv import load_dotenv
+load_dotenv()
 
 # Kết nối sẵn vào kho ChromaDB
 # embeddings = GoogleGenerativeAIEmbeddings(model="models/gemini-embedding-001")
 embeddings = OpenAIEmbeddings(
     model="text-embedding-3-large",
-    api_key=""
+    api_key=os.getenv("OPENAI_API_KEY")
 )
 vector_db = Chroma(persist_directory="./chroma_db", embedding_function=embeddings)
 

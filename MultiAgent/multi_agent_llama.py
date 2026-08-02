@@ -1,4 +1,6 @@
 import os
+from dotenv import load_dotenv
+load_dotenv()
 from langchain_openai import ChatOpenAI
 from langchain_core.messages import HumanMessage, SystemMessage, AIMessage, BaseMessage 
 from langgraph.graph.message import add_messages 
@@ -35,15 +37,15 @@ SUPERVISOR_PROMPT = """Bạn là TỔNG ĐIỀU PHỐI (Supervisor) của một 
 # ==========================================
 # CẤU HÌNH LLM (OLLAMA /v1 ENDPOINT)
 # ==========================================
-# Thay bằng API Key và tên Model chính xác mà bạn đang host trên Ollama
-OLLAMA_API_KEY = "42efac7dac9a4e0a8fb204bc1e444220.TYKmGIaCks2Rt2bRZrWUOKhI" 
-OLLAMA_MODEL_NAME = "kimi-k2.6" # Ví dụ: llama3.1, llama3, qwen2...
+OLLAMA_API_KEY = os.getenv("OLLAMA_API_KEY")
+OLLAMA_MODEL_NAME = os.getenv("OLLAMA_MODEL_NAME", "kimi-k2.6")
+OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "https://ollama.com/v1")
 
 llm = ChatOpenAI(
-    base_url="https://ollama.com/v1",
+    base_url=OLLAMA_BASE_URL,
     api_key=OLLAMA_API_KEY,
     model=OLLAMA_MODEL_NAME,
-    temperature=0 # Để 0 để Agent tư duy logic, không bịa chuyện
+    temperature=0
 )
 
 # ==========================================================

@@ -1,4 +1,6 @@
 import os
+from dotenv import load_dotenv
+load_dotenv()
 from typing import Annotated, Literal, TypedDict
 from pydantic import BaseModel, Field
 
@@ -32,15 +34,12 @@ SUPERVISOR_PROMPT = """Bạn là TỔNG ĐIỀU PHỐI (Supervisor) của một 
 - CHỈ chọn FINISH khi người dùng chào hỏi giao tiếp cơ bản, HOẶC khi câu hỏi đã được một Agent khác trả lời đầy đủ thông tin.
 - TUYỆT ĐỐI KHÔNG chọn FINISH ngay lượt đầu tiên khi người dùng vừa đặt câu hỏi chuyên môn."""
 
-# Cấu hình API Key (Lưu ý: Nên dùng file .env trong thực tế)
-# os.environ["GOOGLE_API_KEY"] = .strip()
-
 # Khởi tạo Mô hình LLM (Bộ não chính)
 llm = ChatGoogleGenerativeAI(
     model="gemini-2.5-flash",
-    temperature=0.7,        # Tính sáng tạo (0.0 đến 2.0)
+    temperature=0.7,
     top_p=0.9,
-    google_api_key=""
+    google_api_key=os.getenv("GOOGLE_API_KEY")
 )
 
 # ==========================================================

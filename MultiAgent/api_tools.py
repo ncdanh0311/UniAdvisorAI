@@ -1,8 +1,11 @@
+import os
 import requests
+from dotenv import load_dotenv
+load_dotenv()
 from langchain_core.tools import tool
 
-# Cấu hình địa chỉ Backend của bạn (Thay đổi port cho đúng với máy của bạn)
-BASE_URL = "https://localhost:44326/api"
+# Đọc cấu hình từ biến môi trường (xem file .env)
+BASE_URL = os.getenv("BACKEND_API_URL", "https://localhost:44326/api")
 
 # -------------------------------------------------------------------------
 # TOOL 1: LẤY THÔNG TIN CÁ NHÂN

@@ -1,0 +1,11 @@
+streamlit
+requests
+langchain
+langchain-core
+langchain-community
+langchain-openai
+langchain-google-genai
+langgraph
+chromadb
+pydantic
+python-dotenv

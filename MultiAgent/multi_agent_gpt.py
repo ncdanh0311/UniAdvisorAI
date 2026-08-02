@@ -1,4 +1,6 @@
 import os
+from dotenv import load_dotenv
+load_dotenv()
 from typing import Annotated, Literal, TypedDict
 from pydantic import BaseModel, Field
 
@@ -39,7 +41,7 @@ SUPERVISOR_PROMPT = """Bạn là TỔNG ĐIỀU PHỐI (Supervisor) của một 
 llm = ChatOpenAI(
     model="gpt-5.5",
     temperature=1,
-    api_key=""
+    api_key=os.getenv("OPENAI_API_KEY")
 )
 
 # ==========================================================
