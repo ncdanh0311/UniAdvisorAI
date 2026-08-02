@@ -1,128 +1,160 @@
-# UniAdvisorAI - Cố vấn Học vụ Sinh viên Thông minh 🎓
+# UniAdvisorAI 🎓
 
-**UniAdvisorAI** là một hệ thống hỗ trợ cố vấn học vụ thông minh dành cho sinh viên đại học. Hệ thống kết hợp giữa **Cơ sở dữ liệu Đào tạo** (được cung cấp qua Backend Web API viết bằng ASP.NET Core) và **Kiến trúc Đa Đặc vụ (Multi-Agent System)** tích hợp RAG (được viết bằng Python, LangChain, LangGraph và Streamlit) để giải đáp mọi thắc mắc của sinh viên một cách nhanh chóng, chính xác.
-
-Hệ thống có khả năng phân biệt và xử lý hai nhóm câu hỏi chính:
-1. **Dữ liệu tĩnh:** Quy chế đào tạo, chuẩn kỹ năng CNTT/Ngoại ngữ, các mẫu đơn, biểu mẫu, quy trình hành chính (Sử dụng kỹ thuật RAG từ tài liệu chính thức).
-2. **Dữ liệu động:** Tra cứu điểm số cá nhân, thời khóa biểu, thông tin đăng ký môn học, danh sách học kỳ, chương trình đào tạo của từng sinh viên (Truy vấn qua Backend API thời gian thực).
+> **Hệ thống Cố vấn Học vụ Thông minh** dành cho sinh viên đại học — kết hợp **Multi-Agent AI** và **RAG** để giải đáp mọi thắc mắc tức thì.
 
 ---
 
-## 🏗️ Kiến trúc Hệ thống
+## Tổng quan
 
-### 1. Backend Web API (`APISinhVien`)
-- **Công nghệ:** ASP.NET Core 8.0, Entity Framework Core.
-- **Cơ sở dữ liệu:** SQL Server.
-- **Nhiệm vụ:** Cung cấp các endpoint RESTful an toàn để truy vấn thông tin sinh viên, điểm số, thời khóa biểu, học kỳ và danh mục môn học. Xem tài liệu API tại: [api_documentation.md](file:///d:/Projects/UniAdvisorAI/APISinhVien/API_SinhVien/api_documentation.md).
+UniAdvisorAI tự động phân loại và xử lý hai nhóm câu hỏi:
 
-### 2. Multi-Agent Dashboard (`MultiAgent`)
-- **Công nghệ:** Python 3.10+, Streamlit, LangChain, LangGraph.
-- **Đồ thị Đặc vụ (LangGraph):**
-  - **Supervisor Agent (Bộ điều phối):** Tiếp nhận câu hỏi từ sinh viên, phân tích ý định và định tuyến đến đặc vụ phù hợp nhất hoặc quyết định kết thúc cuộc hội thoại (`FINISH`).
-  - **AcademicAgent (Đặc vụ Học vụ):** Chịu trách nhiệm về thông tin chung và quy chế. Sử dụng RAG để đọc dữ liệu từ các file PDF/Markdown quy chế học vụ và trả về link biểu mẫu hành chính.
-  - **StudentServiceAgent (Đặc vụ Quản lý Sinh viên):** Chịu trách nhiệm tra cứu dữ liệu cá nhân của sinh viên đang đăng nhập thông qua việc gọi các Web API Backend.
-- **Mô hình hỗ trợ:** GPT-4o (hoặc GPT-3.5/GPT-4), Gemini (qua `ChatGoogleGenerativeAI`), và Llama (qua endpoint tương thích OpenAI/Ollama).
+| Loại câu hỏi | Ví dụ | Xử lý bằng |
+|---|---|---|
+| 📄 **Dữ liệu tĩnh** | Quy chế đào tạo, biểu mẫu, chuẩn kỹ năng | RAG từ tài liệu PDF/Markdown |
+| ⚡ **Dữ liệu động** | Điểm số, thời khóa biểu, môn đăng ký | Gọi Backend API thời gian thực |
 
 ---
 
-## 📂 Cấu trúc Thư mục Dự án
+## Kiến trúc Hệ thống
+
+```
+Người dùng (Streamlit UI)
+        │
+        ▼
+  Supervisor Agent ─── phân tích & định tuyến
+        │
+   ┌────┴────┐
+   ▼         ▼
+Academic   StudentService
+ Agent       Agent
+   │           │
+ RAG từ    Gọi REST
+ PDF/MD     API (.NET)
+                │
+            SQL Server
+```
+
+### Backend Web API — `APISinhVien`
+- **Công nghệ:** ASP.NET Core 8.0, Entity Framework Core, SQL Server
+- **Chức năng:** Cung cấp các endpoint RESTful để truy vấn thông tin sinh viên, điểm số, thời khóa biểu, học kỳ, danh mục môn học
+- 📖 [Xem tài liệu API](APISinhVien/API_SinhVien/api_documentation.md)
+
+### Multi-Agent Dashboard — `MultiAgent`
+- **Công nghệ:** Python 3.10+, Streamlit, LangChain, LangGraph
+- **Các Agent:**
+  - **Supervisor Agent** — tiếp nhận câu hỏi, định tuyến đến agent phù hợp
+  - **AcademicAgent** — tra cứu quy chế, biểu mẫu hành chính qua RAG
+  - **StudentServiceAgent** — tra cứu dữ liệu cá nhân sinh viên qua API
+- **Mô hình LLM hỗ trợ:** GPT-4o, Gemini, Llama (OpenAI-compatible)
+
+---
+
+## Cấu trúc Thư mục
 
 ```text
 UniAdvisorAI/
-├── .gitignore                    # Quản lý file tạm thời và môi trường
-├── DB_SinhVien.bak               # File backup Cơ sở dữ liệu SQL Server
-├── mo_ta_database_quan_ly_dao_tao.md # Tài liệu thiết kế cơ sở dữ liệu chi tiết
+├── DB_SinhVien.bak                      # Backup cơ sở dữ liệu SQL Server
+├── mo_ta_database_quan_ly_dao_tao.md    # Tài liệu thiết kế database
 │
-├── APISinhVien/                  # Dự án Backend Web API (.NET Core)
-│   ├── APISinhVien.sln           # Solution file của Visual Studio
-│   └── API_SinhVien/             # Mã nguồn chính của API
-│       ├── Controllers/          # Xử lý các endpoint API (StudentsController, v.v.)
-│       ├── DTO/                  # Data Transfer Objects định nghĩa cấu trúc trả về
-│       ├── Program.cs            # Cấu hình dịch vụ và khởi chạy API
-│       ├── appsettings.json      # Cấu hình chuỗi kết nối Database và cổng chạy
-│       └── api_documentation.md  # Tài liệu mô tả chi tiết các endpoint API
+├── APISinhVien/                         # Backend Web API (.NET Core)
+│   └── API_SinhVien/
+│       ├── Controllers/                 # Xử lý các endpoint API
+│       ├── DTO/                         # Data Transfer Objects
+│       ├── Program.cs                   # Cấu hình & khởi chạy API
+│       ├── appsettings.json             # Connection string & cổng chạy
+│       └── api_documentation.md        # Tài liệu endpoint API
 │
-└── MultiAgent/                   # Dự án Đa Đặc vụ AI (Python & Streamlit)
-    ├── app.py                    # Giao diện chính Streamlit Dashboard
-    ├── multi_agent_gpt.py        # Cấu hình luồng LangGraph sử dụng mô hình GPT
-    ├── multi_agent_gmi.py        # Cấu hình luồng LangGraph sử dụng mô hình Gemini
-    ├── multi_agent_llama.py      # Cấu hình luồng LangGraph sử dụng mô hình Llama
-    ├── api_tools.py              # Các công cụ gọi API Backend lấy dữ liệu động
-    ├── form_tools.py             # Công cụ lấy link biểu mẫu hành chính
-    ├── rag_tools.py              # Công cụ tìm kiếm văn bản quy chế đào tạo
-    ├── pdf_to_markdown.py        # Script tiền xử lý chuyển đổi PDF quy chế sang Markdown
-    ├── TransformData.py          # Script chunking và nhúng dữ liệu vào Vector DB
-    ├── chroma_db/                # Cơ sở dữ liệu vector lưu trữ tài liệu đã được nhúng
-    ├── data_TienXuLy/            # Thư mục chứa các tệp PDF quy chế gốc
-    └── data_markdown/            # Thư mục chứa các tệp quy chế định dạng Markdown
+└── MultiAgent/                          # Ứng dụng AI (Python & Streamlit)
+    ├── app.py                           # Giao diện Streamlit
+    ├── multi_agent_gpt.py               # LangGraph với GPT
+    ├── multi_agent_gmi.py               # LangGraph với Gemini
+    ├── multi_agent_llama.py             # LangGraph với Llama
+    ├── api_tools.py                     # Công cụ gọi Backend API
+    ├── form_tools.py                    # Công cụ lấy link biểu mẫu
+    ├── rag_tools.py                     # Công cụ tìm kiếm quy chế
+    ├── pdf_to_markdown.py               # Chuyển đổi PDF → Markdown
+    ├── TransformData.py                 # Nhúng dữ liệu vào Vector DB
+    ├── chroma_db/                       # Vector database (ChromaDB)
+    ├── data_TienXuLy/                   # File PDF quy chế gốc
+    └── data_markdown/                   # File quy chế dạng Markdown
 ```
 
 ---
 
-## 🚀 Hướng dẫn Cài đặt & Chạy Hệ thống
+## Cài đặt & Chạy
 
-### Bước 1: Khôi phục Cơ sở dữ liệu (Database Setup)
-1. Mở **SQL Server Management Studio (SSMS)**.
-2. Nhấp chuột phải vào mục **Databases** -> chọn **Restore Database...**
-3. Chọn **Device** -> chọn đường dẫn tới file [`DB_SinhVien.bak`](file:///d:/Projects/UniAdvisorAI/DB_SinhVien.bak) nằm trong thư mục gốc dự án.
-4. Thực hiện Restore database thành công dưới tên `DB_SinhVien`.
+### Bước 1 — Khôi phục Database
 
-### Bước 2: Khởi chạy Backend Web API
-1. Đảm bảo bạn đã cài đặt [.NET SDK 8.0](https://dotnet.microsoft.com/download/dotnet/8.0).
-2. Di chuyển vào thư mục dự án API:
-   ```bash
-   cd APISinhVien/API_SinhVien
-   ```
-3. Cập nhật chuỗi kết nối cơ sở dữ liệu (Connection String) trong tệp [`appsettings.json`](file:///d:/Projects/UniAdvisorAI/APISinhVien/API_SinhVien/appsettings.json) để trỏ đúng về SQL Server cục bộ của bạn:
-   ```json
-   "ConnectionStrings": {
-     "DefaultConnection": "Server=YOUR_SERVER_NAME;Database=DB_SinhVien;Trusted_Connection=True;TrustServerCertificate=True;"
-   }
-   ```
-4. Chạy lệnh phục hồi thư viện và khởi chạy API:
-   ```bash
-   dotnet restore
-   dotnet run
-   ```
-   *Lưu ý:* Ghi lại cổng (Port) mà API đang lắng nghe (mặc định trong code Frontend đang cấu hình cổng `https://localhost:44326/api` hoặc `http://localhost:5087/api`).
-
-### Bước 3: Thiết lập Multi-Agent Dashboard (Frontend)
-1. Đảm bảo bạn đã cài đặt **Python 3.10+**.
-2. Di chuyển vào thư mục `MultiAgent`:
-   ```bash
-   cd MultiAgent
-   ```
-3. Cài đặt các thư viện Python cần thiết:
-   ```bash
-   pip install -r requirements.txt
-   ```
-   *(Các thư viện chính bao gồm: `streamlit`, `langchain`, `langgraph`, `chromadb`, `langchain-openai`, `langchain-google-genai`, `requests`)*
-4. Cấu hình biến môi trường chứa API Key của các dịch vụ LLM:
-   Tạo tệp `.env` trong thư mục `MultiAgent` và điền khóa của bạn:
-   ```env
-   OPENAI_API_KEY=sk-proj-...
-   GOOGLE_API_KEY=AIzaSy...
-   ```
-5. Khởi chạy ứng dụng Streamlit:
-   ```bash
-   streamlit run app.py
-   ```
-6. Truy cập vào giao diện web theo đường dẫn cục bộ hiển thị trên terminal (thường là `http://localhost:8501`).
+1. Mở **SQL Server Management Studio (SSMS)**
+2. Chuột phải vào **Databases** → **Restore Database...**
+3. Chọn **Device** → trỏ đến file `DB_SinhVien.bak` trong thư mục gốc
+4. Restore thành công với tên database là `DB_SinhVien`
 
 ---
 
-## 💡 Hướng dẫn Trò chuyện thử nghiệm
+### Bước 2 — Khởi chạy Backend API
 
-1. Đăng nhập vào Dashboard bằng một Mã số sinh viên hợp lệ tồn tại trong DB (ví dụ: `SV12345`).
-2. Trải nghiệm hệ thống bằng cách đặt các câu hỏi:
-   - **Hỏi quy chế (Academic Agent):** *"Cho mình xin link biểu mẫu xin bảng điểm học tập"* hoặc *"Quy định về chuẩn đầu ra ngoại ngữ của trường thế nào?"*.
-   - **Hỏi thông tin cá nhân (Student Service Agent):** *"Học kỳ này mình đăng ký những môn học nào?"* hoặc *"Tính điểm GPA trung bình học kỳ 1 năm học 2023-2024 của mình"*.
-   - **Trò chuyện linh hoạt:** Hệ thống sẽ tự động phối hợp chuyển giao nhiệm vụ giữa các đặc vụ mà không làm đứt đoạn hay mất ngữ cảnh cuộc nói chuyện.
+> **Yêu cầu:** [.NET SDK 8.0](https://dotnet.microsoft.com/download/dotnet/8.0)
+
+```bash
+cd APISinhVien/API_SinhVien
+dotnet restore
+dotnet run
+```
+
+Cập nhật **Connection String** trong `appsettings.json` trước khi chạy:
+
+```json
+"ConnectionStrings": {
+  "DefaultConnection": "Server=YOUR_SERVER_NAME;Database=DB_SinhVien;Trusted_Connection=True;TrustServerCertificate=True;"
+}
+```
+
+> **Lưu ý:** API mặc định chạy tại `http://localhost:5087/api` hoặc `https://localhost:44326/api`.
 
 ---
 
-## 🧹 Quy chuẩn Phát triển & Đóng góp
-- Để đảm bảo dự án sạch sẽ, không commit các file tạm hay các thư viện đã build lên Git:
-  - Thư mục C# build (`bin/`, `obj/`, `.vs/`) đã được định cấu hình loại bỏ trong `.gitignore`.
-  - Thư mục Python compile (`__pycache__/`, `.env`) cũng được bỏ qua hoàn toàn.
-  - Vui lòng chạy lệnh `git status` trước khi thực hiện commit để kiểm tra các file rác không mong muốn.
+### Bước 3 — Khởi chạy Multi-Agent Dashboard
+
+> **Yêu cầu:** Python 3.10+
+
+```bash
+cd MultiAgent
+pip install -r requirements.txt
+```
+
+Tạo file `.env` trong thư mục `MultiAgent` và điền API key:
+
+```env
+OPENAI_API_KEY=sk-proj-...
+GOOGLE_API_KEY=AIzaSy...
+```
+
+Khởi chạy ứng dụng:
+
+```bash
+streamlit run app.py
+```
+
+Truy cập giao diện tại: **http://localhost:8501**
+
+---
+
+## Dùng thử
+
+Đăng nhập bằng Mã số sinh viên hợp lệ trong DB, sau đó đặt câu hỏi:
+
+- 🎓 **Hỏi quy chế:** *"Quy định về chuẩn đầu ra ngoại ngữ của trường thế nào?"*
+- 📋 **Lấy biểu mẫu:** *"Cho mình xin link biểu mẫu xin bảng điểm học tập"*
+- 📊 **Tra cứu cá nhân:** *"Học kỳ này mình đăng ký những môn học nào?"*
+- 🔢 **Tính điểm:** *"Tính GPA trung bình học kỳ 1 năm 2023-2024 của mình"*
+
+> Hệ thống tự động chuyển giao nhiệm vụ giữa các agent mà không mất ngữ cảnh hội thoại.
+
+---
+
+## Lưu ý khi Đóng góp
+
+- Không commit file build C# (`bin/`, `obj/`, `.vs/`) và file Python compile (`__pycache__/`)
+- Không commit file `.env` chứa API key
+- Chạy `git status` trước khi commit để kiểm tra file không mong muốn
