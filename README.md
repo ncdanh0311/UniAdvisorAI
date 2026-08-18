@@ -1,4 +1,4 @@
-# UniAdvisorAI 🎓
+# UniAdvisorAI 
 
 > **Hệ thống Cố vấn Học vụ Thông minh** dành cho sinh viên đại học — kết hợp **Multi-Agent AI** và **RAG** để giải đáp mọi thắc mắc tức thì.
 
@@ -10,8 +10,8 @@ UniAdvisorAI tự động phân loại và xử lý hai nhóm câu hỏi:
 
 | Loại câu hỏi | Ví dụ | Xử lý bằng |
 |---|---|---|
-| 📄 **Dữ liệu tĩnh** | Quy chế đào tạo, biểu mẫu, chuẩn kỹ năng | RAG từ tài liệu PDF/Markdown |
-| ⚡ **Dữ liệu động** | Điểm số, thời khóa biểu, môn đăng ký | Gọi Backend API thời gian thực |
+|  **Dữ liệu tĩnh** | Quy chế đào tạo, biểu mẫu, chuẩn kỹ năng | RAG từ tài liệu PDF/Markdown |
+|  **Dữ liệu động** | Điểm số, thời khóa biểu, môn đăng ký | Gọi Backend API thời gian thực |
 
 ---
 
@@ -37,7 +37,7 @@ Academic   StudentService
 ### Backend Web API — `APISinhVien`
 - **Công nghệ:** ASP.NET Core 8.0, Entity Framework Core, SQL Server
 - **Chức năng:** Cung cấp các endpoint RESTful để truy vấn thông tin sinh viên, điểm số, thời khóa biểu, học kỳ, danh mục môn học
-- 📖 [Xem tài liệu API](APISinhVien/API_SinhVien/api_documentation.md)
+-  [Xem tài liệu API](APISinhVien/API_SinhVien/api_documentation.md)
 
 ### Multi-Agent Dashboard — `MultiAgent`
 - **Công nghệ:** Python 3.10+, Streamlit, LangChain, LangGraph
@@ -144,10 +144,10 @@ Truy cập giao diện tại: **http://localhost:8501**
 
 Đăng nhập bằng Mã số sinh viên hợp lệ trong DB, sau đó đặt câu hỏi:
 
-- 🎓 **Hỏi quy chế:** *"Quy định về chuẩn đầu ra ngoại ngữ của trường thế nào?"*
-- 📋 **Lấy biểu mẫu:** *"Cho mình xin link biểu mẫu xin bảng điểm học tập"*
-- 📊 **Tra cứu cá nhân:** *"Học kỳ này mình đăng ký những môn học nào?"*
-- 🔢 **Tính điểm:** *"Tính GPA trung bình học kỳ 1 năm 2023-2024 của mình"*
+-  **Hỏi quy chế:** *"Quy định về chuẩn đầu ra ngoại ngữ của trường thế nào?"*
+-  **Lấy biểu mẫu:** *"Cho mình xin link biểu mẫu xin bảng điểm học tập"*
+-  **Tra cứu cá nhân:** *"Học kỳ này mình đăng ký những môn học nào?"*
+-  **Tính điểm:** *"Tính GPA trung bình học kỳ 1 năm 2023-2024 của mình"*
 
 > Hệ thống tự động chuyển giao nhiệm vụ giữa các agent mà không mất ngữ cảnh hội thoại.
 
