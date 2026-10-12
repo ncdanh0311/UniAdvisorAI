@@ -1,0 +1,11 @@
+__pycache__/
+*.py[cod]
+*$py.class
+.env
+.venv/
+env/
+venv/
+.git/
+.vscode/
+DanhGia/BaoCao_KiemThu_*
+DanhGia/Evaluation_Report.txt
